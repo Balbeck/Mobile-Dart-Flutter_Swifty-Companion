@@ -13,6 +13,7 @@ class ProjectModel {
   final String status;
   final bool? validated;
   final int? finalMark;
+  final DateTime? updatedAt;
 
   ProjectModel({
     required this.name,
@@ -20,15 +21,28 @@ class ProjectModel {
     required this.status,
     this.validated,
     this.finalMark,
+    this.updatedAt,
   });
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
+    final dynamic validatedRaw = json['validated'] ?? json['validated?'];
+    final bool? validated = validatedRaw is bool ? validatedRaw : null;
+    DateTime? updated;
+    if (json['updated_at'] != null) {
+      try {
+        updated = DateTime.parse(json['updated_at']);
+      } catch (_) {
+        updated = null;
+      }
+    }
     return ProjectModel(
       name: json['project']['name'] ?? 'Unknown Project',
       slug: json['project']['slug'] ?? 'unknown-project',
       status: json['status'] ?? 'unknown',
-      validated: json['validated'] as bool?,
+      // validated: json['validated'] as bool?,
+      validated: validated,
       finalMark: json['final_mark'] as int?,
+      updatedAt: updated,
     );
   }
 }

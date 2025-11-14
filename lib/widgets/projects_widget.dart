@@ -19,6 +19,12 @@ class ProjectsWidget extends StatelessWidget {
         // .where((p) => p.slug.startsWith('42cursus-'))
         .where((p) => !p.slug.startsWith('c-piscine'))
         .toList();
+    // print('🔵 Filtered projects: ${filtered.map((p) => p.slug).toList()}');
+    filtered.sort((a, b) {
+      final dateA = a.updatedAt ?? DateTime(1970);
+      final dateB = b.updatedAt ?? DateTime(1970);
+      return dateB.compareTo(dateA);
+    });
 
     if (filtered.isEmpty) {
       return const Padding(
