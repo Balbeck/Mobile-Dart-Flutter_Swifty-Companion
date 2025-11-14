@@ -6,7 +6,6 @@ import '../models/user_model.dart';
 class UserService {
   final AuthService _auth = AuthService();
 
-  // Retourne UserModel ou null si erreur / token manquant
   Future<UserModel?> fetchCurrentUser() async {
     try {
       final token = _auth.accessToken ?? await _auth.getStoredToken();

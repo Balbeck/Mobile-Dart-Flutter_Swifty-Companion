@@ -31,7 +31,10 @@
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="com.swiftycompanion42://oauth2redirect" /> <!-- Remplace par ton schéma -->
+            <!-- <data android:scheme="com.swiftycompanion42" /> -->
+            <data
+        android:scheme="com.swiftycompanion42"
+        android:host="oauth2redirect" />
           </intent-filter>
         </activity>
 
