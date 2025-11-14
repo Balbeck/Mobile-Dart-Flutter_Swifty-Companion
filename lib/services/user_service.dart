@@ -4,11 +4,12 @@ import 'auth_42_service.dart';
 import '../models/user_model.dart';
 
 class UserService {
-  final AuthService _auth = AuthService();
+  final AuthService authService = AuthService();
 
   Future<UserModel?> fetchCurrentUser() async {
     try {
-      final token = _auth.accessToken ?? await _auth.getStoredToken();
+      final token =
+          authService.accessToken ?? await authService.getStoredToken();
       if (token == null || token.isEmpty) {
         print('⚠️ No access token available for GET /v2/me');
         return null;
@@ -29,7 +30,7 @@ class UserService {
       }
 
       final Map<String, dynamic> json = jsonDecode(res.body);
-      print('✅ Fetched user data: $json');
+      // print('✅ Fetched user data: $json');
       return UserModel.fromJson(json);
     } catch (e) {
       print('❌ fetchCurrentUser error: $e');

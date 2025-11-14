@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/user_service.dart';
 import '../models/user_model.dart';
+import '../widgets/skills_widget.dart';
+import '../widgets/projects_widget.dart';
 
 class ProfileView extends StatefulWidget {
   final VoidCallback onLogout;
@@ -47,24 +49,57 @@ class _ProfileViewState extends State<ProfileView> {
           ),
         ],
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(radius: 50, backgroundImage: imageProvider),
-            const SizedBox(height: 20),
-            Text(
-              'Family Name: ${_user?.lastName ?? 'FamilleToto'}',
-              style: const TextStyle(fontSize: 16),
+            // Header avec avatar
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  CircleAvatar(radius: 50, backgroundImage: imageProvider),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Login: ${_user?.login ?? 'TheToto'}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    'Last name: ${_user?.lastName ?? 'FamilleToto'}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    'First name: ${_user?.firstName ?? 'Toto'}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    'Full name: ${_user?.usualFullName ?? 'Toto FamilleToto'}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    'Email: ${_user?.email ?? 'toto@42.email.com'}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    'Level: ${_user?.level.toStringAsFixed(2) ?? '0.00'}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Text(
-              'Name: ${_user?.firstName ?? 'Toto'}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Login: ${_user?.login ?? 'TheToto'}',
-              style: const TextStyle(fontSize: 16),
-            ),
+            const Divider(),
+            if (_user != null) ...[
+              SkillsListWidget(skills: _user!.skills),
+              const SizedBox(height: 20),
+              ProjectsWidget(projects: _user!.projectsUsers),
+            ] else
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text('Loading...'),
+              ),
           ],
         ),
       ),
