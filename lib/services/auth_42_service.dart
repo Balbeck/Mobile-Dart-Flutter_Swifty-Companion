@@ -74,6 +74,12 @@ class AuthService {
 
   Future<bool> checkForCodeInURLandExchangeCodeForToken() async {
     try {
+      // if (getStoredToken() == null) {
+      //   print('ℹ️ No stored token, checking URL for code');
+      // } else {
+      //   print('ℹ️ Already have a stored token, skipping code exchange');
+      //   return true;
+      // }
       final code = Uri.base.queryParameters['code'];
       if (code == null || code.isEmpty) {
         print('❌ No code in URL');

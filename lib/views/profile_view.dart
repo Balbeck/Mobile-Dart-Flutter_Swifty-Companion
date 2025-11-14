@@ -4,6 +4,7 @@ import '../models/user_model.dart';
 import '../widgets/skills_widget.dart';
 import '../widgets/projects_widget.dart';
 import '../widgets/user_presentation_widget.dart';
+import '../services/auth_42_service.dart';
 
 class ProfileView extends StatefulWidget {
   final VoidCallback onLogout;
@@ -15,18 +16,24 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  final UserService _userService = UserService();
+  final UserService userService = UserService();
+  final AuthService authService = AuthService();
   UserModel? _user;
 
   @override
   void initState() {
     super.initState();
-    _loadUser();
+    loadUser();
   }
 
-  void _loadUser() async {
-    final user = await _userService.fetchCurrentUser();
+  void loadUser() async {
+    final user = await userService.fetchCurrentUser();
     if (mounted) setState(() => _user = user);
+  }
+
+  Future<void> handleLogout() async {
+    await authService.logout();
+    widget.onLogout();
   }
 
   @override
@@ -41,7 +48,7 @@ class _ProfileViewState extends State<ProfileView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: widget.onLogout,
+            onPressed: handleLogout,
             tooltip: 'Logout',
           ),
         ],
