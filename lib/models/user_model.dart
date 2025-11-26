@@ -71,19 +71,15 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    // chemin d'asset par défaut
     String imagePath = 'assets/images/profile_default.jpg';
     double level = 0.0;
     List<SkillModel> skills = [];
     List<ProjectModel> projectsUsers = [];
-
-    // final projectsUsersList = json['projects_users'];
     // print('🔵 projects_users: $projectsUsersList');
 
     try {
       final image = json['image'];
       if (image != null) {
-        // préférer versions.medium > large > small > link
         final versions = image['versions'];
         if (versions != null) {
           imagePath =

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import '../services/search_service.dart';
 import '../services/user_service.dart';
 import '../models/user_model.dart';
 import '../widgets/skills_widget.dart';
 import '../widgets/projects_widget.dart';
 import '../widgets/user_presentation_widget.dart';
 import '../services/auth_42_service.dart';
+import '../widgets/top_search_bar.dart';
 
 class ProfileView extends StatefulWidget {
   final VoidCallback onLogout;
@@ -16,13 +18,16 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  final UserService userService = UserService();
+  late final UserService userService;
   final AuthService authService = AuthService();
+  final SearchService searchService = SearchService();
   UserModel? _user;
+  bool _isUserFound = true;
 
   @override
   void initState() {
     super.initState();
+    userService = UserService(onLogout: widget.onLogout);
     loadUser();
   }
 
@@ -34,6 +39,19 @@ class _ProfileViewState extends State<ProfileView> {
   Future<void> handleLogout() async {
     await authService.logout();
     widget.onLogout();
+  }
+
+  Future<void> _handleSearch(String Login) async {
+    final foundUser = await searchService.fetchUserByLogin(Login);
+    setState(() {
+      if (foundUser != null) {
+        _user = foundUser;
+        _isUserFound = true;
+        return;
+      }
+      _isUserFound = false;
+    });
+    // print('User found: $foundUser');
   }
 
   @override
@@ -57,6 +75,11 @@ class _ProfileViewState extends State<ProfileView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            TopSearchBar(
+              onSearch: _handleSearch,
+              isUserFound: _isUserFound,
+              errorText: 'User not found',
+            ),
             if (_user != null) ...[
               ProfileHeaderWidget(user: _user!),
               SkillsListWidget(skills: _user!.skills),

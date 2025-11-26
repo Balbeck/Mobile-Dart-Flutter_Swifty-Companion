@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'auth_42_service.dart';
 import '../models/user_model.dart';
 
 class UserService {
   final AuthService authService = AuthService();
+
+  VoidCallback? onLogout;
+  UserService({this.onLogout});
 
   Future<UserModel?> fetchCurrentUser() async {
     try {
@@ -23,6 +27,15 @@ class UserService {
           'Accept': 'application/json',
         },
       );
+
+      if (res.statusCode == 401) {
+        print('⚠️ Unauthorized: Access token may be invalid or expired.');
+
+        await authService.logout();
+        onLogout?.call();
+
+        return null;
+      }
 
       if (res.statusCode != 200) {
         print('❌ GET /v2/me failed: ${res.statusCode} ${res.body}');
